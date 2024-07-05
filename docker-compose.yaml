@@ -40,7 +40,6 @@ services:
     depends_on:
       - db
       - redis
-      - msmtpd
     volumes:
       - "librenms-data:/data"
     env_file:
