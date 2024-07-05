@@ -26,13 +26,6 @@ services:
       - "TZ=${TZ}"
     restart: always
 
-  msmtpd:
-    image: crazymax/msmtpd:latest
-    container_name: librenms_msmtpd
-    env_file:
-      - "./msmtpd.env"
-    restart: always
-
   librenms:
     image: librenms/librenms:latest
     container_name: librenms
@@ -88,72 +81,6 @@ services:
       - "DB_TIMEOUT=60"
       - "DISPATCHER_NODE_ID=dispatcher1"
       - "SIDECAR_DISPATCHER=1"
-    restart: always
-
-  syslogng:
-    image: librenms/librenms:latest
-    container_name: librenms_syslogng
-    hostname: librenms-syslogng
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    depends_on:
-      - librenms
-      - redis
-    ports:
-      - target: 514
-        published: 514
-        protocol: tcp
-      - target: 514
-        published: 514
-        protocol: udp
-    volumes:
-      - "librenms-data:/data"
-    env_file:
-      - "./librenms.env"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "DB_HOST=db"
-      - "DB_NAME=${MYSQL_DATABASE}"
-      - "DB_USER=${MYSQL_USER}"
-      - "DB_PASSWORD=${MYSQL_PASSWORD}"
-      - "DB_TIMEOUT=60"
-      - "SIDECAR_SYSLOGNG=1"
-    restart: always
-
-  snmptrapd:
-    image: librenms/librenms:latest
-    container_name: librenms_snmptrapd
-    hostname: librenms-snmptrapd
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    depends_on:
-      - librenms
-      - redis
-    ports:
-      - target: 162
-        published: 162
-        protocol: tcp
-      - target: 162
-        published: 162
-        protocol: udp
-    volumes:
-      - "librenms-data:/data"
-    env_file:
-      - "./librenms.env"
-    environment:
-      - "TZ=${TZ}"
-      - "PUID=${PUID}"
-      - "PGID=${PGID}"
-      - "DB_HOST=db"
-      - "DB_NAME=${MYSQL_DATABASE}"
-      - "DB_USER=${MYSQL_USER}"
-      - "DB_PASSWORD=${MYSQL_PASSWORD}"
-      - "DB_TIMEOUT=60"
-      - "SIDECAR_SNMPTRAPD=1"
     restart: always
 networks:
   default:
